@@ -9,7 +9,7 @@ const lodash = require("lodash");
 const getSpecies = async (req, res) => {
   try {
     // Select all rows from the "bsg_people" table
-    const query = "SELECT * FROM species";
+    const query = "SELECT * FROM Species";
     // Execute the query using the "db" object from the configuration file
     const [rows] = await db.query(query);
     // Send back the rows to the client
@@ -43,7 +43,7 @@ const createSpecies = async (req, res) => {
   try {
     const { name, subsection, chromosomes, originCountry } = req.body;
     const query =
-      "INSERT INTO species (speciesName, subSection, chromosomeCount, originCountry) VALUES (?, ?, ?, ?)";
+      "INSERT INTO Species (speciesName, subSection, chromosomeCount, originCountry) VALUES (?, ?, ?, ?)";
 
     const response = await db.query(query, [
       name,
@@ -68,14 +68,14 @@ const updateSpecies = async (req, res) => {
   const newSpecies = req.body;
 
   try {
-    const [data] = await db.query(`SELECT * FROM species WHERE speciesID = ${speciesID}`);
+    const [data] = await db.query(`SELECT * FROM Species WHERE speciesID = ${speciesID}`);
 
     const oldSpecies = data[0];
 
     // If any attributes are not equal, perform update
     if (!lodash.isEqual(newSpecies, oldSpecies)) {
       const query =
-        "UPDATE species SET speciesName=?, subSection=?, chromosomeCount=?, originCountry=? WHERE speciesID=?";
+        "UPDATE Species SET speciesName=?, subSection=?, chromosomeCount=?, originCountry=? WHERE speciesID=?";
 
       const values = [
         newSpecies.name,
@@ -108,7 +108,7 @@ const deleteSpecies = async (req, res) => {
   try {
     // Ensure the species exitst
     const [isExisting] = await db.query(
-      "SELECT 1 FROM species WHERE speciesID = ?",
+      "SELECT 1 FROM Species WHERE speciesID = ?",
       [speciesID]
     );
 
