@@ -1,7 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 
-const SpeciesPageForm = ({ mode, preloadData, submitCallback }) => {
+const SpeciesPageForm = ({ mode, preloadData, submitCallback, modalCallback }) => {
     const { register, getValues } = useForm();
     console.log(`Preload\n${JSON.stringify(preloadData)}`)
     if (!preloadData) {
@@ -23,11 +23,13 @@ const SpeciesPageForm = ({ mode, preloadData, submitCallback }) => {
         const chromosomes = getValues(inputNames.chromosomes);
         const originCountry = getValues(inputNames.originCountry);
         submitCallback({
+            id: preloadData["ID"],
             name: name,
             subsection: subsection,
             chromosomes: chromosomes,
             originCountry: originCountry
-        })
+        });
+        modalCallback();
     }
     return (
         <Form onSubmit={handleSubmit}>

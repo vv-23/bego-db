@@ -46,7 +46,7 @@ function BGDataTable({ headers, rows, editCallback, deleteCallback }) {
                     }}>
                         Edit
                     </Button>
-                    <Button variant='danger' onClick={deleteCallback}>
+                    <Button variant='danger' onClick={() => {deleteCallback(parseInt(row[0]))}}>
                         Delete
                     </Button>
                 </>

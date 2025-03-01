@@ -15,7 +15,7 @@ app.use(cors({ credentials: true, origin: "*" }));
 app.use(express.json());
 
 // API Routes for backend CRUD:
-app.use("/api/people", require("./routes/peopleRoutes"));
+app.use("/species", require("./routes/speciesRoutes"));
 
 
 // Add your Connect DB Activitiy Code Below:
@@ -38,18 +38,6 @@ app.get('/api/diagnostic', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
-//GET SOME THINGS
-
-app.get('/', function(req, res)
-    {  
-        let getSpecies = "SELECT `speciesID`,`speciesName`,`subSection`,`chromosomeCount`,`originCountry` FROM `Species` ORDER BY speciesName ASC;";               // Define our query
-
-        db.pool.query(getSpecies, function(error, rows, fields){    // Execute the query
-
-            res.render('species', {data: rows});                   
-        })                                                     
-    });   
 
 
 //ADD Data
