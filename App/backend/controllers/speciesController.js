@@ -130,7 +130,7 @@ const deleteSpecies = async (req, res) => {
     );*/
 
     // Delete the species from bsg_people
-    await db.query("DELETE FROM species WHERE speciesID = ?", [speciesID]);
+    await db.query("DELETE FROM Species WHERE speciesID = ?", [speciesID]);
 
     // Return the appropriate status code
     res.status(204).json({ message: "species deleted successfully" })
