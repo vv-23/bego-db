@@ -1,16 +1,17 @@
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import PeoplePage from "./pages/PeoplePage";
-import Navbar from "./components/navbar/NavBar";
+import NavHeader from "./components/navbar/NavHeader";
+import SpeciesPage from "./pages/SpeciesPage";
 
 function App() {
   return (
     <>
-      <Navbar />
+      <NavHeader />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/people/*" element={<PeoplePage />} />
+        <Route path="/species" element={<SpeciesPage />} />
       </Routes>
     </>
   );
