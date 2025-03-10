@@ -1,5 +1,15 @@
+import bg from '../assets/bg_home.JPG';
+//import '../App.css';
+
 function HomePage() {
-  return <h2>Feel free to add any information you like about your project</h2>;
+  return (<div style={{
+    backgroundImage: `url(${bg})`,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    height: '100vh'
+  }}>
+    </div>
+    );
 }
 
 export default HomePage;
