@@ -29,7 +29,8 @@ const SpeciesPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
             chromosomes: chromosomes,
             originCountry: originCountry
         });
-        modalCallback();
+        if (modalCallback && (typeof modalCallback === "function"))
+            modalCallback();
     }
     return (
         <Form onSubmit={handleSubmit}>
