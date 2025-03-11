@@ -60,15 +60,13 @@ const getHybridizationByID = async (req, res) => {
 const createHybridization = async (req, res) => {
   try {
     const { date, ovary, pollen, success } = req.body;
-    if (ovary == 'N/A') ovary = null;
-    if (pollen == 'N/A') pollen = null;
     const query =
       "INSERT INTO HybridizationEvents (hybridizationDate, ovaryID, pollenID, success) VALUES (?, ?, ?, ?)";
 
     const response = await db.query(query, [
         date,
-        ovary,
-        pollen,
+        (ovary == 'N/A' ? null : ovary),
+        (pollen == 'N/A' ? null : pollen),
         success
     ]);
     res.status(201).json(response);

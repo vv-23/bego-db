@@ -25,7 +25,7 @@ const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
     useEffect(() => {
         const fetchHybridizationOptions = async () => {
             try {
-                const response = await fetch("http://localhost:3300/hybrids/hybridizations");
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/hybrids/hybridizations`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch hybridizations");
                 }
@@ -68,7 +68,7 @@ const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
            <Form.Group>
                 <Form.Label>Hybridization ID:</Form.Label>
                 <Form.Control as ="select" {...register(inputNames.hybridizationID)}
-                defaultValue={isEdit ? preloadData["hybridizationID"] : ""}
+                defaultValue={isEdit ? `7` : ""}
                 required >
                     
                     <option value="">Select Hybridization</option>
