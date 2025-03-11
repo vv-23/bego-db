@@ -1,7 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useContext } from 'react';
-import { SpeciesNamesContext } from '../context/speciesNamesContext';
+import { SpeciesNamesContext } from '../context/SpeciesNamesContext';
 
 const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) => {
     const { register, getValues } = useForm();

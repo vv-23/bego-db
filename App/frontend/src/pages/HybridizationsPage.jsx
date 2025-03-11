@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { SpeciesNamesContext } from '../components/context/speciesNamesContext';
+import { SpeciesNamesContext } from '../components/context/SpeciesNamesContext';
 import BGDataTable from '../components/datatable/BGDatatable';
 import HybridizationsPageForm from '../components/hybridizationsPageForm/HybridizationsPageForm';
 import Modal from 'react-bootstrap/Modal';
