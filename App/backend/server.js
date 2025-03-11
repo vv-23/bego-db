@@ -22,6 +22,7 @@ app.use(express.json());
 // });
 
 app.use("/species", require("./routes/speciesRoutes"));
+app.use("/hybrids", require("./routes/hybridsRoutes.js"));
 
 
 // Add your Connect DB Activitiy Code Below:
@@ -113,8 +114,6 @@ app.put('/update-species', function(req,res,next){
 
   let chromosomeCount = parseInt(data.chromosomeCount);
 
-  let begonia = parseInt(data.fullname);
-
   let updateSpecies = `UPDATE species SET 
                           speciesName = ? 
                           subSection = ?
@@ -149,9 +148,123 @@ app.put('/update-species', function(req,res,next){
             }
 })});
     
+
+app.post('/add-hybrid', function(req, res) 
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    //let hybridizationID = data.hybridizationID
+
+    // Capture NULL values
+    let sowDate = data.sowDate;
+    if (isNaN(sowDate)){ sowDate = 'NULL'}
+
+    let germinationDate = parseInt(data.germinationDate);
+    if (isNaN(germinationDate)) {germinationDate = 'NULL'}
+
+    let flowerDate = data.flowerDate;
+    if (isNaN(flowerDate)) {flowerDate = 'NULL'}
+
+    // Create the query and run it on the database
+    insertHybrid = `INSERT INTO Hybrids (hybridizationID,sowDate,germinationDate,flowerDate) VALUES (${data.hybridizationID}', '${sowDate}', ${germinationDate}, ${flowerDate})`;
+    db.pool.query(insertHybrid, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on bsg_people
+            returnHybrids = "SELECT Hybrids.hybridID, mother.speciesName AS motherPlant, father.speciesName AS fatherPlant, Hybrids.sowDate, Hybrids.germinationDate, Hybrids.flowerDate FROM Hybrids JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID JOIN Species father ON HybridizationEvents.pollenID = father.speciesID;" ;
+            db.pool.query(returnHybrids, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
+
+app.put('/update-hybrid', function(req,res,next){
+  let data = req.body;
+
+  let hybrid = parseInt(data.hybridID);
+  // Capture NULL values
+  let sowDate = data.sowDate;
+  if (isNaN(sowDate)){ sowDate = 'NULL'}
+
+  let germinationDate = parseInt(data.germinationDate);
+  if (isNaN(germinationDate)) {germinationDate = 'NULL'}
+
+  let flowerDate = data.flowerDate;
+  if (isNaN(flowerDate)) {flowerDate = 'NULL'}
+
+  let updateHybrid = `UPDATE  Hybrids SET hybridizationID = ?,
+                        sowDate  = ?, 
+                        germinationDate = ?, 
+                        flowerDate = ? WHERE 
+                      hybridID = :hybridID;`;
+  let selectHybrid = `SELECT * FROM hybrids WHERE hybridizationID = ?`
+
+        // Run the 1st query
+        db.pool.query(updateHybrid, [hybridizationID, sowDate, germinationDate, flowerDate], function(error, rows, fields){
+            if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error);
+            res.sendStatus(400);
+            }
+
+            // If there was no error, we run our second query and return that data so we can use it to update the people's
+            // table on the front-end
+            else
+            {
+                // Run the second query
+                db.pool.query(selectHybrid, [hybrid], function(error, rows, fields) {
+
+                    if (error) {
+                        console.log(error);
+                        res.sendStatus(400);
+                    } else {
+                        res.send(rows);
+                    }
+                })
+            }
+})});
+
+//DEL Hybrid
+app.delete('/delete-hybrid', function(req,res,next){
+  let data = req.body;
+  let hybridID = parseInt(data.id);
+  let deleteHybrid= `DELETE FROM Hybrids WHERE id = ?`;
+
+
+        db.pool.query(deleteHybrid, [hybridID], function(error, rows, fields){
+            if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error);
+            res.sendStatus(400);
+            }
+})});
+
 // ...
 // End Connect DB Activity Code.
-
 
 const os = require("os");
 const hostname = os.hostname();

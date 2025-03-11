@@ -19,11 +19,11 @@ const HybridsPage = () => {
 
     const { register, getValues } = useForm();
     const [editFormInitialValues, setEditFormInitialValues] = useState({
-        'ID': null,
-        'Name': null,
-        'Subsection': null,
-        'Chromosome Count': null,
-        'Origin Country': null,
+        'hybridID': null,
+        'hybridizationID': null,
+        'sowDate': null,
+        'germinationDate': null,
+        'flowerDate': null
     })
 
     const handleEditClose = () => setEditModalShow(false);
@@ -82,43 +82,43 @@ const HybridsPage = () => {
         return formattedRows;
     }
 
-    const addSpecies = async (newSpecies) => {
-        const URL = `${import.meta.env.VITE_API_URL}/species`;
+    const addHybrid = async (newHybrid) => {
+        const URL = `${import.meta.env.VITE_API_URL}/hybrids`;
         console.log(URL);
         try {
             let response = await fetch(URL, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newSpecies)
+                body: JSON.stringify(newHybrid)
             });
             if (response.status === 201) {
-                navigate("/species");
+                navigate("/hybrids");
             } else {
-                alert("Error creating species");
+                alert("Error creating hybrid");
             }
         } catch (error) {
-            alert("Error creating species");
-            console.error("Error creating species:", error);
+            alert("Error creating hybrid");
+            console.error("Error creating hybrid:", error);
         }
     }
 
-    const editSpecies = async (newSpecies) => {
-        const URL = `${import.meta.env.VITE_API_URL}/species/${newSpecies.id}`;
+    const editHybrid = async (newHybrid) => {
+        const URL = `${import.meta.env.VITE_API_URL}/hybrids/${newHybrid.id}`;
         console.log(URL);
         try {
             let response = await fetch(URL, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newSpecies)
+                body: JSON.stringify(newHybrid)
             });
             if (response.status === 200) {
-                navigate("/species");
+                navigate("/hybrids");
             } else {
-                alert("Error editing species");
+                alert("Error editing hybrid");
             }
         } catch (error) {
-            alert("Error editing species");
-            console.error("Error editing species:", error);
+            alert("Error editing hybrid");
+            console.error("Error editing hybrid:", error);
         }
     }
 
@@ -152,15 +152,6 @@ const HybridsPage = () => {
         'Actions'
     ];
     const [hybridRows, setHybridsRows] = useState([]);
-    `[
-        ['1', 'Begonia AAA', 'Gobenia', '22', 'Ecuador'],
-        ['2', 'Begonia BBB', 'Petermannia', '24', 'Ecuador'],
-        ['3', 'Begonia tenuissima', 'Petermannia', '20', 'Borneo'],
-        ['4', 'Begonia decora', 'Platycentrum', '26', 'Malaysia'],
-        ['5', 'Begonia dodsonii', 'Gobenia', '22', 'Ecuador'],
-        ['6', 'Begonia lichenora', 'Platycentrum', '14', 'Borneo'],
-        ['7', 'Begonia luzhaiensis', 'Coleocentrum', '20', 'China'],
-    ];`
 
     return (
         <>

@@ -9,7 +9,7 @@ const lodash = require("lodash");
 const getHybrids = async (req, res) => {
   try {
     // Select all rows from the "Hybrids" table
-    const query = "SELECT * FROM Hybrids";
+    const query = "SELECT Hybrids.hybridID, mother.speciesName AS motherPlant, father.speciesName AS fatherPlant, Hybrids.sowDate, Hybrids.germinationDate, Hybrids.flowerDate FROM Hybrids JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID JOIN Species father ON HybridizationEvents.pollenID = father.speciesID";
     // Execute the query using the "db" object from the configuration file
     const [rows] = await db.query(query);
     // Send back the rows to the client
@@ -20,23 +20,24 @@ const getHybrids = async (req, res) => {
   }
 };
 
-// Returns a single person by their unique ID from bsg_people
-const getSpeciesByID = async (req, res) => {
+// Returns hybridization IDs as text
+const hybridizationIDs = async (req, res) => {
   try {
-    const personID = req.params.id;
-    const query = "SELECT * FROM bsg_people WHERE id = ?";
-    const [result] = await db.query(query, [personID]);
-    // Check if person was found
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Person not found" });
-    }
-    const person = result[0];
-    res.json(person);
+      const query = `SELECT 
+        he.hybridizationID, 
+        CONCAT(mother.speciesName, ' x ', father.speciesName) AS hybridCross
+        FROM HybridizationEvents he
+        JOIN Species mother ON he.ovaryID = mother.speciesID
+        JOIN Species father ON he.pollenID = father.speciesID
+        ORDER BY hybridCross ASC;`;
+      const [rows] = await db.query(query);
+      res.status(200).json(rows); // Send to frontend
   } catch (error) {
-    console.error("Error fetching person from the database:", error);
-    res.status(500).json({ error: "Error fetching person" });
+      console.error("Error fetching hybridization options:", error);
+      res.status(500).json({ error: "Database query failed" });
   }
 };
+
 
 // Returns status of creation of new hyb in hybrids
 const createHybrid = async (req, res) => {
@@ -51,6 +52,7 @@ const createHybrid = async (req, res) => {
       germinationDate,
       flowerDate,
     ]);
+
     res.status(201).json(response);
   } catch (error) {
     // Print the error for the dev
@@ -59,7 +61,6 @@ const createHybrid = async (req, res) => {
     res.status(500).json({ error: "Error creating hybrid" });
   }
 };
-
 
 const updateHybrid = async (req, res) => {
   // Get the hybrid ID
@@ -131,5 +132,6 @@ module.exports = {
   getHybrids,
   createHybrid,
   updateHybrid,
-  deleteHybrid
+  deleteHybrid,
+  hybridizationIDs
 };
