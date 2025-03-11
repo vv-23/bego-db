@@ -177,7 +177,7 @@ const HybridizationsPage = () => {
     return (
         <SpeciesNamesContext.Provider value={speciesNames}>
             <div className="container my-4">
-                <h1>Hybridizations</h1>
+                <h1>Hybridization Events</h1>
                 <BGDataTable headers={hybridizationHeaders} rows={processTable(hybridizationRows, speciesNames)} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
 
                 <h2 className="mt-4">Add Hybridizations</h2>
