@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import NavHeader from "./components/navbar/NavHeader";
 import SpeciesPage from "./pages/SpeciesPage";
 import TraitsPage from "./pages/TraitsPage";
+import HybridizationsPage from "./pages/HybridizationsPage";
 
 function App() {
   return (
@@ -13,7 +14,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/species" element={<SpeciesPage />} />
-        <Route path="/Traits" element={<TraitsPage />} />
+        <Route path="/traits" element={<TraitsPage />} />
+        <Route path="/hybridizations" element={<HybridizationsPage />} />
       </Routes>
     </>
   );

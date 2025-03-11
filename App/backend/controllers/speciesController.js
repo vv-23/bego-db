@@ -23,18 +23,18 @@ const getSpecies = async (req, res) => {
 // Returns a single person by their unique ID from bsg_people
 const getSpeciesByID = async (req, res) => {
   try {
-    const personID = req.params.id;
-    const query = "SELECT * FROM bsg_people WHERE id = ?";
-    const [result] = await db.query(query, [personID]);
+    const speciesID = req.params.id;
+    const query = "SELECT * FROM Species WHERE id = ?";
+    const [result] = await db.query(query, [speciesID]);
     // Check if person was found
     if (result.length === 0) {
-      return res.status(404).json({ error: "Person not found" });
+      return res.status(404).json({ error: "Species not found" });
     }
     const person = result[0];
     res.json(person);
   } catch (error) {
-    console.error("Error fetching person from the database:", error);
-    res.status(500).json({ error: "Error fetching person" });
+    console.error("Error fetching species from the database:", error);
+    res.status(500).json({ error: "Error fetching species" });
   }
 };
 
@@ -143,6 +143,7 @@ const deleteSpecies = async (req, res) => {
 // Export the functions as methods of an object
 module.exports = {
   getSpecies,
+  getSpeciesByID,
   createSpecies,
   updateSpecies,
   deleteSpecies

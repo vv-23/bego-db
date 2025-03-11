@@ -17,6 +17,8 @@ app.use(express.json());
 // API Routes for backend CRUD:
 app.use("/species", require("./routes/speciesRoutes"));
 app.use("/traits", require("./routes/traitsRoutes"));
+app.use("/hybridizations", require("./routes/hybridizationsRoutes"));
+
 
 
 // Add your Connect DB Activitiy Code Below:

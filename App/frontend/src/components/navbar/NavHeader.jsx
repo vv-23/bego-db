@@ -13,7 +13,7 @@ function NavHeader() {
             <Nav className="me-auto">
                 <Nav.Link href='/'>Home</Nav.Link>
                 <Nav.Link href='/species'>Species</Nav.Link>
-                <Nav.Link href='/species'>Hybridization Events</Nav.Link>
+                <Nav.Link href='/hybridizations'>Hybridization Events</Nav.Link>
                 <Nav.Link href='/species'>Hybrids</Nav.Link>
                 <Nav.Link href='/traits'>Traits</Nav.Link>
                 <Nav.Link href='/species'>Species Traits</Nav.Link>
