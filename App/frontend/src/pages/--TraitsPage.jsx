@@ -68,7 +68,6 @@ const SpeciesPage = () => {
         return rows;
     }
 
-
     const addSpecies = async (newSpecies) => {
         const URL = `${import.meta.env.VITE_API_URL}/species`;
         console.log(URL);
@@ -87,7 +86,7 @@ const SpeciesPage = () => {
             alert("Error creating species");
             console.error("Error creating species:", error);
         }
-    }    //ADD
+    }
 
     const editSpecies = async (newSpecies) => {
         const URL = `${import.meta.env.VITE_API_URL}/species/${newSpecies.id}`;
@@ -127,6 +126,7 @@ const SpeciesPage = () => {
             console.error("Error deleting species:", error);
         }
     }
+
 
 
     // Sample data for the table

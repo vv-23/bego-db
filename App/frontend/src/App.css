@@ -2,3 +2,7 @@
     color: red;
     background-color: black;
 }
+
+.me-auto {
+    justify-content: center
+}
