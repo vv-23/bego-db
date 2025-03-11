@@ -2,19 +2,19 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import BGDataTable from '../components/datatable/BGDatatable';
-import SpeciesPageForm from '../components/speciesPageForm/SpeciesPageForm';
+import HybridsPageForm from '../components/hybridsPageForm/HybridsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import { set, useForm } from "react-hook-form";
 
 
-const SpeciesPage = () => {
+const HybridsPage = () => {
     const navigate = useNavigate()
     const [editModalShow, setEditModalShow] = useState(false);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [deleteID, setDeleteID] = useState(null);
     useEffect(() => {
-        fetchSpecies();
+        fetchHybrids();
     }, []);
 
     const { register, getValues } = useForm();
@@ -34,38 +34,52 @@ const SpeciesPage = () => {
     }
 
     const handleDeleteClose = () => setDeleteModalShow(false);
-    const handleDeleteShow = (speciesID) => {
+    const handleDeleteShow = (hybridID) => {
         setDeleteModalShow(true);
-        setDeleteID(speciesID);
+        setDeleteID(hybridID);
     }
 
     const handleAddSubmit = async (formData) => {
         //console.log(`${formData.name} | ${formData.subsection} | ${formData.chromosomes} | ${formData.originCountry}`);
         console.log(`Add Form:\n${JSON.stringify(formData)}`);
-        await addSpecies(formData);
-        await fetchSpecies();
+        await addHybrid(formData);
+        await fetchHybrids();
     }
 
     const handleEditSubmit = async (formData) => {
         console.log(`Edit Form:\n${JSON.stringify(formData)}`);
-        await editSpecies(formData);
-        await fetchSpecies();
+        await editHybrid(formData);
+        await fetchHybrids();
     }
 
-    const handleDelete = async (speciesID) => {
-        console.log(`Delete Form:\n${speciesID}`);
-        await deleteSpecies(speciesID);
-        await fetchSpecies();
+    const handleDelete = async (hybridID) => {
+        console.log(`Delete Form:\n${hybridID}`);
+        await deleteHybrid(hybridID);
+        await fetchHybrids();
     }
 
-    const fetchSpecies = async () => {
-        const URL = `${import.meta.env.VITE_API_URL}/species`;
+    const fetchHybrids = async () => {
+        const URL = `${import.meta.env.VITE_API_URL}/hybrids`;
         let response = await fetch(URL);
         let responseJSON = await response.json();
         let rows = responseJSON.map(obj => Object.values(obj));
-        console.log(`/species\n${JSON.stringify(rows)}`);
-        setSpeciesRows(rows);
-        return rows;
+
+
+        const formattedRows = rows.map(row => {
+            return [
+                row[0],  // ID
+                row[1],  // mom
+                row[2],  // dad
+                row[3] ? row[3].split("T")[0] : null,  // Format sow date
+                row[4] ? row[4].split("T")[0] : null,  // Format germination date
+                row[5] ? row[4].split("T")[0] : null   // Format flowering date
+            ];
+        });
+        //T08:00:00.000Z
+
+        console.log(`/hybrids\n${JSON.stringify(rows)}`);
+        setHybridsRows(formattedRows);
+        return formattedRows;
     }
 
     const addSpecies = async (newSpecies) => {
@@ -108,8 +122,8 @@ const SpeciesPage = () => {
         }
     }
 
-    const deleteSpecies = async (speciesID) => {
-        const URL = `${import.meta.env.VITE_API_URL}/species/${speciesID}`;
+    const deleteHybrid = async (hybridID) => {
+        const URL = `${import.meta.env.VITE_API_URL}/hybrids/${hybridID}`;
         console.log(URL);
         try {
             let response = await fetch(URL, {
@@ -117,31 +131,30 @@ const SpeciesPage = () => {
                 headers: { 'Content-Type': 'application/json' },
             });
             if (response.status === 204) {
-                navigate("/species");
+                navigate("/hybrids");
             } else {
-                alert("Error deleting species");
+                alert("Error deleting hybrid");
             }
         } catch (error) {
-            alert("Error deleting species");
-            console.error("Error deleting species:", error);
+            alert("Error deleting hybrid");
+            console.error("Error deleting hybrid:", error);
         }
     }
 
-
-
     // Sample data for the table
-    const speciesHeaders = [
+    const HybridHeaders = [
         'ID',
-        'Name',
-        'Subsection',
-        'Chromosome Count',
-        'Origin Country',
+        'Mother Plant',
+        'Father Plant',
+        'Sow Date',
+        'Germination Date',
+        'Flowering Date',
         'Actions'
     ];
-    const [speciesRows, setSpeciesRows] = useState([]);
+    const [hybridRows, setHybridsRows] = useState([]);
     `[
-        ['1', 'Begonia hitchcockii', 'Gobenia', '22', 'Ecuador'],
-        ['2', 'Begonia pearcei', 'Petermannia', '24', 'Ecuador'],
+        ['1', 'Begonia AAA', 'Gobenia', '22', 'Ecuador'],
+        ['2', 'Begonia BBB', 'Petermannia', '24', 'Ecuador'],
         ['3', 'Begonia tenuissima', 'Petermannia', '20', 'Borneo'],
         ['4', 'Begonia decora', 'Platycentrum', '26', 'Malaysia'],
         ['5', 'Begonia dodsonii', 'Gobenia', '22', 'Ecuador'],
@@ -152,18 +165,18 @@ const SpeciesPage = () => {
     return (
         <>
             <div className="container my-4">
-                <h1>Species</h1>
-                <BGDataTable headers={speciesHeaders} rows={speciesRows} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
+                <h1>Hybrids</h1>
+                <BGDataTable headers={HybridHeaders} rows={hybridRows} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
 
-                <h2 className="mt-4">Add Species</h2>
-                <SpeciesPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
+                <h2 className="mt-4">Add Hybrid</h2>
+                <HybridsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
             </div>
             <Modal show={editModalShow} onHide={handleEditClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Species</Modal.Title>
+                    <Modal.Title>Edit Hybrid</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <SpeciesPageForm mode={"edit"} preloadData={editFormInitialValues} submitCallback={handleEditSubmit} modalCallback={handleEditClose}/>
+                    <HybridsPageForm mode={"edit"} preloadData={editFormInitialValues} submitCallback={handleEditSubmit} modalCallback={handleEditClose}/>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleEditClose}>
@@ -173,7 +186,7 @@ const SpeciesPage = () => {
             </Modal>
             <Modal show={deleteModalShow} onHide={handleDeleteClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Delete Species</Modal.Title>
+                    <Modal.Title>Delete Hybrid</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     Confirm delete item?
@@ -195,4 +208,4 @@ const SpeciesPage = () => {
     );
 };
 
-export default SpeciesPage;
+export default HybridsPage;

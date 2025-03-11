@@ -14,11 +14,11 @@ function NavHeader() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
                 <Nav.Link href='/species'>Species</Nav.Link>
-                <Nav.Link href='/species'>Hybrids</Nav.Link>
-                <Nav.Link href='/species'>Hybridization Events</Nav.Link>
-                <Nav.Link href='/species'>Traits</Nav.Link>
-                <Nav.Link href='/species'>Species Traits</Nav.Link>
-                <Nav.Link href='/species'>Hybrid Traits</Nav.Link>
+                <Nav.Link href='/hybrids'>Hybrids</Nav.Link>
+                <Nav.Link href='/events'>Hybridization Events</Nav.Link>
+                <Nav.Link href='/traits'>Traits</Nav.Link>
+                <Nav.Link href='/speciesTraits'>Species Traits</Nav.Link>
+                <Nav.Link href='/hybridTraits'>Hybrid Traits</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
