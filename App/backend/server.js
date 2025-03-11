@@ -23,6 +23,9 @@ app.use(express.json());
 
 app.use("/species", require("./routes/speciesRoutes"));
 app.use("/hybrids", require("./routes/hybridsRoutes.js"));
+app.use("/hybridsTraits", require("./routes/hybridsTraitsRoutes.js"));
+app.use("/speciesTraits", require("./routes/speciesTraitsRoutes.js"));
+
 
 
 // Add your Connect DB Activitiy Code Below:
