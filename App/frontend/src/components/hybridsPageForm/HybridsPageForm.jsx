@@ -1,10 +1,11 @@
 import { Button, Form } from 'react-bootstrap';
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { HybridizationsContext, SpeciesNamesContext } from '../context/BegoniaContext';
 
 const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) => {
     const { register, getValues } = useForm();
-    const [hybridizationOptions, setHybridizationOptions] = useState([]);
+    const hybridizations = useContext(HybridizationsContext);
 
     console.log(`Preload\n${JSON.stringify(preloadData)}`)
     if (!preloadData) {
@@ -15,29 +16,16 @@ const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
 
     let inputNames = {
         hybridID: (isEdit ? "editID" : "hybridID"),
-        hybridizationID: (isEdit ? "editID" : "hybridizationID"),
+        hybridizationID: (isEdit ? "editHybridizationID" : "hybridizationID"),
         sowDate: (isEdit ? "editSow" : "sowDate"),
         germinationDate: (isEdit ? "editGermination" : "germinationDate"),
         flowerDate: (isEdit ? "editFlower" : "flowerDate"),
     }
 
-    //get hybridizations drop down
-    useEffect(() => {
-        const fetchHybridizationOptions = async () => {
-            try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/hybrids/hybridizations`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch hybridizations");
-                }
-                const data = await response.json();
-                setHybridizationOptions(data);
-            } catch (error) {
-                console.error("Error fetching hybridizations:", error);
-            }
-        };
-    
-        fetchHybridizationOptions();
-    }, []);
+    function matchHybridizationNamesToID(hybridizationNames) {
+        const species = hybridizationNames.find(item => item.speciesName === speciesName);
+        return species ? species.speciesID : null;
+    }
 
     function handleSubmit(e) {
         e.preventDefault();
@@ -55,34 +43,35 @@ const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
         });
         modalCallback();
     }
+    console.log(hybridizations);
     return (
         <Form onSubmit={handleSubmit}>
-        {/* hybridization options drop-down */}
+            {/* hybridization options drop-down */}
             {isEdit && (
-            <input 
-                type="hidden" 
-                {...register("hybridID")} 
-                value={preloadData["hybridID"] || ""}
-            />)} 
-
-           <Form.Group>
+                <input
+                    type="hidden"
+                    {...register(inputNames.hybridID)}
+                    value={preloadData["ID"] || ""}
+                />)}
+             
+            <Form.Group>
                 <Form.Label>Hybridization ID:</Form.Label>
-                <Form.Control as ="select" {...register(inputNames.hybridizationID)}
-                defaultValue={isEdit ? `7` : ""}
-                required >
-                    
-                    <option value="">Select Hybridization</option>
+                <Form.Select {...register(inputNames.hybridizationID)} defaultValue={preloadData["HE-ID"]} required >
 
-                    {hybridizationOptions.map((option, index) => {
+                    <option value={null}>Select Hybridization</option>
+
+                    {hybridizations.map((obj, index) => {
                         return (
-                            <option 
-                                key={option.hybridizationID ?? `hybrid-${index}`} 
-                                value={option.hybridizationID || ""}>
-                                {option.hybridCross	 || "Unnamed Hybrid"}
+                            <option
+                                key={obj.hybridizationID ?? `hybrid-${index}`}
+                                value={obj.hybridizationID || ""}
+                                >
+                                {`${obj.hybridizationID} | ${obj.hybridizationDate} | ${obj.ovaryName} x ${obj.pollenName} | ${obj.success ? "Success" : "Failed"}`}
                             </option>
-                        );})}
+                        );
+                    })}
 
-                </Form.Control>
+                </Form.Select>
             </Form.Group>
 
             <Form.Group>
@@ -95,7 +84,7 @@ const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
             </Form.Group>
             <Form.Group>
                 <Form.Label>Flower Date:</Form.Label>
-                <Form.Control type='date'  {...register(inputNames.flowerDate)} defaultValue={preloadData["Flower Date"]} />
+                <Form.Control type='date'  {...register(inputNames.flowerDate)} defaultValue={preloadData["Flowering Date"]} />
             </Form.Group>
             <Button variant="primary" type='submit'>
                 Submit

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { SpeciesNamesContext } from '../components/context/SpeciesNamesContext';
+import { SpeciesNamesContext, SpeciesNamesProvider } from '../components/context/BegoniaContext';
 import BGDataTable from '../components/datatable/BGDatatable';
 import HybridizationsPageForm from '../components/hybridizationsPageForm/HybridizationsPageForm';
 import Modal from 'react-bootstrap/Modal';
@@ -13,6 +13,8 @@ const HybridizationsPage = () => {
     const [editModalShow, setEditModalShow] = useState(false);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [deleteID, setDeleteID] = useState(null);
+    const [hybridizationRows, setHybridizationsRows] = useState([]);
+    const [speciesNames, setSpeciesNames] = useState([]);
     useEffect(() => {
         fetchHybridizations();
         fetchSpeciesNames();
@@ -70,17 +72,12 @@ const HybridizationsPage = () => {
     }
 
     const fetchSpeciesNames = async () => {
-        const URL = `${import.meta.env.VITE_API_URL}/species`;
+        const URL = `${import.meta.env.VITE_API_URL}/species?field=speciesID,speciesName`;
         let response = await fetch(URL);
-        let responseJSON = await response.json();
-        let rows = responseJSON.map(obj => Object.values(obj));
-        console.log(`/species\n${JSON.stringify(rows)}`);
-        let speciesNames = rows.map((row, index) => {
-            return [row[0], row[1]]
-        })
+        let speciesNames = await response.json();
         console.log(`Species names\n${JSON.stringify(speciesNames)}`);
         setSpeciesNames(speciesNames);
-        return rows;
+        return speciesNames;
     }
 
     const addHybridizations = async (newHybridization) => {
@@ -144,13 +141,13 @@ const HybridizationsPage = () => {
     }
 
     const processTable = (hybridizationRows, speciesNames) => {
-        const speciesMap = speciesNames.reduce((map, [id, name]) => {
-            map[id] = name;
+        const speciesMap = speciesNames.reduce((map, {speciesID, speciesName}) => {
+            map[speciesID] = speciesName;
             return map;
         }, {});
         let processedTable = hybridizationRows.map((row, index) => {
-            const ovarySpecies = speciesMap[Number(row[2])];
-            const pollenSpecies = speciesMap[Number(row[3])];
+            const ovarySpecies = speciesMap[Number(row[2])] ? speciesMap[Number(row[2])] : 'N/A';
+            const pollenSpecies = speciesMap[Number(row[3])] ? speciesMap[Number(row[3])] : 'N/A';
             return [
                 row[0],       // hybridizationID
                 row[1],       // hybridizationDate
@@ -171,8 +168,6 @@ const HybridizationsPage = () => {
         'Success',
         'Actions'
     ];
-    const [hybridizationRows, setHybridizationsRows] = useState([]);
-    const [speciesNames, setSpeciesNames] = useState([]);
 
     return (
         <SpeciesNamesContext.Provider value={speciesNames}>

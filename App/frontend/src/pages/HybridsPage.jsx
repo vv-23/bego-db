@@ -6,15 +6,21 @@ import HybridsPageForm from '../components/hybridsPageForm/HybridsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
 import { set, useForm } from "react-hook-form";
+import { HybridizationsContext } from '../components/context/BegoniaContext';
 
 
 const HybridsPage = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [editModalShow, setEditModalShow] = useState(false);
     const [deleteModalShow, setDeleteModalShow] = useState(false);
     const [deleteID, setDeleteID] = useState(null);
+    const [hybridRows, setHybridsRows] = useState([]);
+    const [hybridizations, setHybridizations] = useState([]);
+    const [speciesNames, setSpeciesNames] = useState([]);
+
     useEffect(() => {
         fetchHybrids();
+        fetchHybridizations();
     }, []);
 
     const { register, getValues } = useForm();
@@ -58,28 +64,29 @@ const HybridsPage = () => {
         await fetchHybrids();
     }
 
+    const fetchHybridizations = async () => {
+        const URL = `${import.meta.env.VITE_API_URL}/hybridizations/pretty`;
+        let response = await fetch(URL);
+        let responseJSON = await response.json();
+        setHybridizations(responseJSON);
+    }
+
+    const fetchSpeciesNames = async () => {
+        const URL = `${import.meta.env.VITE_API_URL}/species?field=speciesID,speciesName`;
+        let response = await fetch(URL);
+        let responseJSON = await response.json();
+        setSpeciesNames(responseJSON);
+    }
+
     const fetchHybrids = async () => {
         const URL = `${import.meta.env.VITE_API_URL}/hybrids`;
         let response = await fetch(URL);
         let responseJSON = await response.json();
         let rows = responseJSON.map(obj => Object.values(obj));
 
-
-        const formattedRows = rows.map(row => {
-            return [
-                row[0],  // ID
-                row[1],  // mom
-                row[2],  // dad
-                row[3] ? row[3].split("T")[0] : null,  // Format sow date
-                row[4] ? row[4].split("T")[0] : null,  // Format germination date
-                row[5] ? row[4].split("T")[0] : null   // Format flowering date
-            ];
-        });
-        //T08:00:00.000Z
-
         console.log(`/hybrids\n${JSON.stringify(rows)}`);
-        setHybridsRows(formattedRows);
-        return formattedRows;
+        console.log(rows);
+        setHybridsRows(rows);
     }
 
     const addHybrid = async (newHybrid) => {
@@ -103,7 +110,7 @@ const HybridsPage = () => {
     }
 
     const editHybrid = async (newHybrid) => {
-        const URL = `${import.meta.env.VITE_API_URL}/hybrids/${newHybrid.id}`;
+        const URL = `${import.meta.env.VITE_API_URL}/hybrids/${newHybrid.hybridID}`;
         console.log(URL);
         try {
             let response = await fetch(URL, {
@@ -141,9 +148,29 @@ const HybridsPage = () => {
         }
     }
 
+    const processTable = (hybridRows, hybridizations) => {
+        let processedTable = hybridRows.map((row, index) => {
+            let hybridizationID = row[1];
+            const hybridization = hybridizations.find((item) => {
+                return hybridizationID === item.hybridizationID;
+            });
+            return [
+                row[0],
+                hybridizationID,
+                hybridization ? hybridization.ovaryName : 'N/A',
+                hybridization ? hybridization.pollenName : 'N/A',
+                row[2],
+                row[3],
+                row[4],
+            ]
+        });
+        return processedTable
+    }
+
     // Sample data for the table
     const HybridHeaders = [
         'ID',
+        'HE-ID',
         'Mother Plant',
         'Father Plant',
         'Sow Date',
@@ -151,18 +178,17 @@ const HybridsPage = () => {
         'Flowering Date',
         'Actions'
     ];
-    const [hybridRows, setHybridsRows] = useState([]);
 
     return (
-        <>
+        <HybridizationsContext.Provider value={hybridizations}>
             <div className="container my-4">
                 <h1>Hybrids</h1>
-                <BGDataTable headers={HybridHeaders} rows={hybridRows} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
+                <BGDataTable headers={HybridHeaders} rows={processTable(hybridRows, hybridizations)} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
 
                 <h2 className="mt-4">Add Hybrid</h2>
                 <HybridsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
             </div>
-            <Modal show={editModalShow} onHide={handleEditClose}>
+            <Modal size='lg' show={editModalShow} onHide={handleEditClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Hybrid</Modal.Title>
                 </Modal.Header>
@@ -195,7 +221,7 @@ const HybridsPage = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
-        </>
+        </HybridizationsContext.Provider>
     );
 };
 

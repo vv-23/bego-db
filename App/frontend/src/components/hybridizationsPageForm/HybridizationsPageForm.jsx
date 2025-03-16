@@ -1,7 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useContext } from 'react';
-import { SpeciesNamesContext } from '../context/SpeciesNamesContext';
+import { SpeciesNamesContext } from '../context/BegoniaContext';
 
 const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) => {
     const { register, getValues } = useForm();
@@ -21,12 +21,8 @@ const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallba
     }
 
     function matchSpeciesNameToID(speciesName) {
-        const speciesMap = speciesNames.reduce((map, [id, name]) => {
-            map[name] = id;
-            return map;
-        }, {});
-        console.log(speciesMap);
-        return speciesMap[speciesName]
+        const species = speciesNames.find(item => item.speciesName === speciesName);
+        return species ? species.speciesID : null;
     }
 
     function handleSubmit(e) {
@@ -56,8 +52,8 @@ const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallba
                 <Form.Select {...register(inputNames.ovary)} required defaultValue={matchSpeciesNameToID(preloadData["Mother sp."])}>
                     <option value={null}>N/A</option>
                     {
-                        speciesNames.map((pair, index) => {
-                            return <option value={pair[0]} key={pair[1]}>{pair[1]}</option>
+                        speciesNames.map((obj, index) => {
+                            return <option value={obj['speciesID']} key={obj['speciesName']}>{obj['speciesName']}</option>
                         })
                     }
                 </Form.Select>
@@ -67,8 +63,8 @@ const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallba
                 <Form.Select {...register(inputNames.pollen)} required defaultValue={matchSpeciesNameToID(preloadData["Father sp."])}>
                     <option value={null}>N/A</option>
                     {
-                        speciesNames.map((pair, index) => {
-                            return <option value={pair[0]} key={pair[1]}>{pair[1]}</option>
+                        speciesNames.map((obj, index) => {
+                            return <option value={obj['speciesID']} key={obj['speciesName']}>{obj['speciesName']}</option>
                         })
                     }
                 </Form.Select>

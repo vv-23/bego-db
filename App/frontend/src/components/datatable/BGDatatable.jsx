@@ -14,17 +14,10 @@ import 'datatables.net-searchpanes-bs5';
 
 function BGDataTable({ headers, rows, editCallback, deleteCallback }) {
     DataTable.use(BS5);
-    let actionButtonColumnIndex = headers.length - 1
-    console.log(headers)
-    console.log(rows)
-
-    function editRow() {
-        alert("Edit Row")
-    }
-
-    function deleteRow() {
-        alert("Delete Row")
-    }
+    let actionButtonColumnIndex = headers.length - 1;
+    console.log(`Datatable headers:\n${headers}`);
+    console.log(`Datatable rows:\n`);
+    console.log(rows);
 
     function mapRowToHeaders(headers, row) {
         // Filter out the "Actions" header
