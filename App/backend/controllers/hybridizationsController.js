@@ -24,7 +24,10 @@ const getHybridizationPretty = async (req, res) => {
     try {
         // Select all rows from the "bsg_people" table
         const query = 
-        `SELECT hybridizationID, hybridizationDate, ovary.speciesName as ovaryName, pollen.speciesName AS pollenName, success FROM HybridizationEvents
+        `SELECT hybridizationID, DATE_FORMAT(hybridizationDate, '%Y-%m-%d') as hybridizationDate, 
+            ovary.speciesName as ovaryName, 
+            pollen.speciesName AS pollenName, 
+            success FROM HybridizationEvents
             INNER JOIN Species AS ovary ON HybridizationEvents.ovaryID = ovary.speciesID
             INNER JOIN Species AS pollen ON HybridizationEvents.pollenID = pollen.speciesID;`
         

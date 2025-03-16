@@ -7,9 +7,14 @@ const lodash = require("lodash");
 
 // Returns all rows of people in bsg_people
 const getSpecies = async (req, res) => {
+  let columns = "*";
+  if (req.query.fields) {
+    // Split by commas and trim extra spaces
+    columns = req.query.fields.split(',').map(col => col.trim()).join(', ');
+  }
   try {
     // Select all rows from the "bsg_people" table
-    const query = "SELECT * FROM Species";
+    const query = `SELECT ${columns} FROM Species`;
     // Execute the query using the "db" object from the configuration file
     const [rows] = await db.query(query);
     // Send back the rows to the client
@@ -22,9 +27,14 @@ const getSpecies = async (req, res) => {
 
 // Returns a single person by their unique ID from bsg_people
 const getSpeciesByID = async (req, res) => {
+  let columns = "*";
+  if (req.query.fields) {
+    // Split by commas and trim extra spaces
+    columns = req.query.fields.split(',').map(col => col.trim()).join(', ');
+  }
   try {
     const speciesID = req.params.id;
-    const query = "SELECT * FROM Species WHERE id = ?";
+    const query = `SELECT ${columns} FROM Species WHERE speciesID = ?`;
     const [result] = await db.query(query, [speciesID]);
     // Check if person was found
     if (result.length === 0) {

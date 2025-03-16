@@ -5,11 +5,35 @@ require("dotenv").config();
 // Util to deep-compare two objects
 const lodash = require("lodash");
 
-// Returns all rows of hybrids
 const getHybrids = async (req, res) => {
   try {
+    const query = `SELECT *,
+      DATE_FORMAT(Hybrids.sowDate, '%Y-%m-%d') as sowDate, 
+      DATE_FORMAT(Hybrids.germinationDate, '%Y-%m-%d') as germinationDate, 
+      DATE_FORMAT(Hybrids.flowerDate, '%Y-%m-%d') as flowerDate
+      from Hybrids`;
+    const [rows] = await db.query(query);
+    // Send back the rows to the client
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching Hybrids from the database:", error);
+    res.status(500).json({ error: "Error fetching Hybrids" });
+  }
+}
+
+// Returns all rows of hybrids
+const getHybridsFormatted = async (req, res) => {
+  try {
     // Select all rows from the "Hybrids" table
-    const query = "SELECT Hybrids.hybridID, mother.speciesName AS motherPlant, father.speciesName AS fatherPlant, Hybrids.sowDate, Hybrids.germinationDate, Hybrids.flowerDate FROM Hybrids JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID JOIN Species father ON HybridizationEvents.pollenID = father.speciesID";
+    const query = `SELECT Hybrids.hybridID, 
+      mother.speciesName AS motherPlant, 
+      father.speciesName AS fatherPlant, 
+      DATE_FORMAT(Hybrids.sowDate, '%Y-%m-%d') as sowDate, 
+      DATE_FORMAT(Hybrids.germinationDate, '%Y-%m-%d') as germinationDate, 
+      DATE_FORMAT(Hybrids.flowerDate, '%Y-%m-%d') as flowerDate FROM Hybrids 
+      JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID 
+      JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID 
+      JOIN Species father ON HybridizationEvents.pollenID = father.speciesID`;
     // Execute the query using the "db" object from the configuration file
     const [rows] = await db.query(query);
     // Send back the rows to the client
@@ -23,18 +47,18 @@ const getHybrids = async (req, res) => {
 // Returns hybridization IDs as text
 const hybridizationIDs = async (req, res) => {
   try {
-      const query = `SELECT 
+    const query = `SELECT 
         he.hybridizationID, 
         CONCAT(mother.speciesName, ' x ', father.speciesName) AS hybridCross
         FROM HybridizationEvents he
         JOIN Species mother ON he.ovaryID = mother.speciesID
         JOIN Species father ON he.pollenID = father.speciesID
         ORDER BY hybridCross ASC;`;
-      const [rows] = await db.query(query);
-      res.status(200).json(rows); // Send to frontend
+    const [rows] = await db.query(query);
+    res.status(200).json(rows); // Send to frontend
   } catch (error) {
-      console.error("Error fetching hybridization options:", error);
-      res.status(500).json({ error: "Database query failed" });
+    console.error("Error fetching hybridization options:", error);
+    res.status(500).json({ error: "Database query failed" });
   }
 };
 
@@ -42,6 +66,7 @@ const hybridizationIDs = async (req, res) => {
 // Returns status of creation of new hyb in hybrids
 const createHybrid = async (req, res) => {
   try {
+    console.log(`CREATE HYBRID:\n${JSON.stringify(req.body)}`)
     const { hybridizationID, sowDate, germinationDate, flowerDate } = req.body;
     const query =
       "INSERT INTO `Hybrids` (`hybridizationID`,`sowDate`, `germinationDate`,`flowerDate`) VALUES (?, ?, ?, ?)";
@@ -67,6 +92,8 @@ const updateHybrid = async (req, res) => {
   const hybridID = req.params.id;
   // Get the person object
   const newHybrid = req.body;
+  console.log("UPDATE /hybrids:")
+  console.log(JSON.stringify(req.body));
 
   try {
     const [data] = await db.query(`SELECT * FROM Hybrids WHERE hybridID = ${hybridID}`);
@@ -119,11 +146,12 @@ const deleteHybrid = async (req, res) => {
     // Delete the hybrid
     await db.query("DELETE FROM Hybrids WHERE hybridID = ?", [hybridID]);
 
-      // Return the appropriate status code
-      res.status(204).json({ message: "hybrid deleted successfully" })} 
-      catch (error) {
-        console.error("Error deleting hybrid from the database:", error);
-      res.status(500).json({ error: error.message });
+    // Return the appropriate status code
+    res.status(204).json({ message: "hybrid deleted successfully" })
+  }
+  catch (error) {
+    console.error("Error deleting hybrid from the database:", error);
+    res.status(500).json({ error: error.message });
   }
 };
 
