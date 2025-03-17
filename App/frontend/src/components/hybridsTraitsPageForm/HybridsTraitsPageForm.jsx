@@ -1,14 +1,14 @@
 import { Button, Form } from 'react-bootstrap';
 import { useForm } from "react-hook-form";
 import { useContext } from 'react';
-import { SpeciesNamesContext, TraitsContext } from '../context/BegoniaContext';
+import { HybridsNamesContext, TraitsContext } from '../context/BegoniaContext';
 
-const SpeciesTraitsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) => {
+const HybridTraitsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) => {
     const { register, getValues } = useForm();
-    const speciesNames = useContext(SpeciesNamesContext);
+    const hybridsNames = useContext(HybridsNamesContext);
     const traits = useContext(TraitsContext);
     console.log(`Preload\n${JSON.stringify(preloadData)}`);
-    console.log(`Form Species Names\n${JSON.stringify(speciesNames)}`);
+    console.log(`Form Hybrid Names\n${JSON.stringify(hybridsNames)}`);
     console.log(`Traits:`); console.log(traits);
 
     if (!preloadData) {
@@ -17,23 +17,23 @@ const SpeciesTraitsPageForm = ({ mode, preloadData, submitCallback, modalCallbac
     let isEdit = (mode == 'edit')
 
     let inputNames = {
-        oldSpeciesID: (isEdit ? "oldSpeciesID" : "oldSpeciesID"),
-        oldTraitID: (isEdit ? "oldTraitID" : "oldSpeciesID"),
-        speciesID: (isEdit ? "editSpeciesID" : "speciesID"),
+        oldHybridID: (isEdit ? "oldHybridID" : "oldHybridID"),
+        oldTraitID: (isEdit ? "oldTraitID" : "oldHybridID"),
+        hybridID: (isEdit ? "editHybridID" : "hybridID"),
         traitID: (isEdit ? "editTraitID" : "traitID"),
     }
 
     function handleSubmit(e) {
         e.preventDefault();
-        const oldSpeciesID = isEdit ? getValues(inputNames.oldSpeciesID) : null;
+        const oldHybridID = isEdit ? getValues(inputNames.oldHybridID) : null;
         const oldTraitID = isEdit ? getValues(inputNames.oldTraitID) : null;
-        const speciesID = getValues(inputNames.speciesID);
+        const hybridID = getValues(inputNames.hybridID);
         const traitID = getValues(inputNames.traitID);
         submitCallback({
             id: preloadData["ID"],
-            oldSpeciesID: oldSpeciesID,
+            oldHybridID: oldHybridID,
             oldTraitID: oldTraitID,
-            speciesID: speciesID,
+            hybridID: hybridID,
             traitID: traitID
         });
         if (modalCallback && (typeof modalCallback === "function"))
@@ -42,17 +42,17 @@ const SpeciesTraitsPageForm = ({ mode, preloadData, submitCallback, modalCallbac
 
     return (
         <Form onSubmit={handleSubmit}>
-            <Form.Control type='hidden' {...register(inputNames.oldSpeciesID)} defaultValue={preloadData["Species ID"]}>
+            <Form.Control type='hidden' {...register(inputNames.oldHybridID)} defaultValue={preloadData["Hybrid ID"]}>
             </Form.Control>
             <Form.Control type='hidden' {...register(inputNames.oldTraitID)} defaultValue={preloadData["Trait ID"]}>
             </Form.Control>
             <Form.Group>
-                <Form.Label>Species:</Form.Label>
-                <Form.Select {...register(inputNames.speciesID)} defaultValue={preloadData["Species ID"]} required disabled={isEdit}>
-                    <option value={null}>Select a species</option>
+                <Form.Label>Hybrid:</Form.Label>
+                <Form.Select {...register(inputNames.hybridID)} defaultValue={preloadData["Hybrid ID"]} required disabled={isEdit}>
+                    <option value={null}>Select a hybrid</option>
                     {
-                        speciesNames.map((obj, index) => {
-                            return <option value={obj['speciesID']} key={`${index}|${obj['speciesName']}`}>{obj['speciesName']}</option>
+                        hybridsNames.map((obj, index) => {
+                            return <option value={obj['hybridID']} key={`${index}|${obj['hybridName']}`}>{obj['hybridName']}</option>
                         })
                     }
                 </Form.Select>
@@ -75,4 +75,4 @@ const SpeciesTraitsPageForm = ({ mode, preloadData, submitCallback, modalCallbac
     )
 }
 
-export default SpeciesTraitsPageForm;
+export default HybridTraitsPageForm;

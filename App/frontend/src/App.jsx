@@ -8,6 +8,7 @@ import HybridsPage from "./pages/HybridsPage.jsx";
 import TraitsPage from "./pages/TraitsPage";
 import HybridizationsPage from "./pages/HybridizationsPage";
 import SpeciesTraitsPage from "./pages/SpeciesTraitsPage.jsx";
+import HybridsTraitsPage from "./pages/HybridsTraitsPage.jsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/traits" element={<TraitsPage />} />
         <Route path="/hybridizations" element={<HybridizationsPage />} />
         <Route path="/speciesTraits" element={<SpeciesTraitsPage />} />
+        <Route path="/hybridsTraits" element={<HybridsTraitsPage />} />
       </Routes>
     </>
   );

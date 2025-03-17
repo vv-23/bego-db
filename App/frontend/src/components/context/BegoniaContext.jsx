@@ -45,6 +45,8 @@ export function SpeciesNamesProvider({ children }) {
     )
 }
 
+export const HybridsNamesContext = createContext([]);
+
 export const HybridizationsContext = createContext([]);
 
 export function HybridizationsProvider({ children }) {
