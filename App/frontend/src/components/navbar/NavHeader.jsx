@@ -17,7 +17,7 @@ function NavHeader() {
                 <Nav.Link href='/hybridizations'>Hybridization Events</Nav.Link>
                 <Nav.Link href='/hybrids'>Hybrids</Nav.Link>
                 <Nav.Link href='/traits'>Traits</Nav.Link>
-                <Nav.Link href='/species'>Species Traits</Nav.Link>
+                <Nav.Link href='/speciesTraits'>Species Traits</Nav.Link>
                 <Nav.Link href='/species'>Hybrid Traits</Nav.Link>
             </Nav>
           </Navbar.Collapse>

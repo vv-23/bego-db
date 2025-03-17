@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import Form from 'react-bootstrap/Form';
 import BGDataTable from '../components/datatable/BGDatatable';
 import HybridsPageForm from '../components/hybridsPageForm/HybridsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button } from 'react-bootstrap';
-import { set, useForm } from "react-hook-form";
 import { HybridizationsContext } from '../components/context/BegoniaContext';
+import { fetchData } from '../utils/sharedutils';
 
 
 const HybridsPage = () => {
@@ -19,11 +18,12 @@ const HybridsPage = () => {
     const [speciesNames, setSpeciesNames] = useState([]);
 
     useEffect(() => {
-        fetchHybrids();
-        fetchHybridizations();
+        //fetchHybrids();
+        fetchData(`${import.meta.env.VITE_API_URL}/hybrids`, true, setHybridsRows);
+        //fetchHybridizations();
+        fetchData(`${import.meta.env.VITE_API_URL}/hybridizations/pretty`, false, setHybridizations);
     }, []);
 
-    const { register, getValues } = useForm();
     const [editFormInitialValues, setEditFormInitialValues] = useState({
         'hybridID': null,
         'hybridizationID': null,
@@ -62,20 +62,6 @@ const HybridsPage = () => {
         console.log(`Delete Form:\n${hybridID}`);
         await deleteHybrid(hybridID);
         await fetchHybrids();
-    }
-
-    const fetchHybridizations = async () => {
-        const URL = `${import.meta.env.VITE_API_URL}/hybridizations/pretty`;
-        let response = await fetch(URL);
-        let responseJSON = await response.json();
-        setHybridizations(responseJSON);
-    }
-
-    const fetchSpeciesNames = async () => {
-        const URL = `${import.meta.env.VITE_API_URL}/species?field=speciesID,speciesName`;
-        let response = await fetch(URL);
-        let responseJSON = await response.json();
-        setSpeciesNames(responseJSON);
     }
 
     const fetchHybrids = async () => {
@@ -149,6 +135,8 @@ const HybridsPage = () => {
     }
 
     const processTable = (hybridRows, hybridizations) => {
+        console.log(hybridRows);
+        console.log(hybridizations);
         let processedTable = hybridRows.map((row, index) => {
             let hybridizationID = row[1];
             const hybridization = hybridizations.find((item) => {
@@ -157,8 +145,8 @@ const HybridsPage = () => {
             return [
                 row[0],
                 hybridizationID,
-                hybridization ? hybridization.ovaryName : 'N/A',
-                hybridization ? hybridization.pollenName : 'N/A',
+                hybridization ? (hybridization.ovaryName ? hybridization.ovaryName : 'N/A') : 'N/A',
+                hybridization ? (hybridization.pollenName ? hybridization.pollenName : 'N/A') : 'N/A',
                 row[2],
                 row[3],
                 row[4],
