@@ -40,7 +40,8 @@ const HybridsPage = () => {
     }
 
     const handleDeleteClose = () => setDeleteModalShow(false);
-    const handleDeleteShow = (hybridID) => {
+    const handleDeleteShow = (row) => {
+        const hybridID = parseInt(row[0]);
         setDeleteModalShow(true);
         setDeleteID(hybridID);
     }

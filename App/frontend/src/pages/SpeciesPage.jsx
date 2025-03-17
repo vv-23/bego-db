@@ -34,7 +34,8 @@ const SpeciesPage = () => {
     }
 
     const handleDeleteClose = () => setDeleteModalShow(false);
-    const handleDeleteShow = (speciesID) => {
+    const handleDeleteShow = (row) => {
+        const speciesID = parseInt(row[0]);
         setDeleteModalShow(true);
         setDeleteID(speciesID);
     }

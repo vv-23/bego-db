@@ -12,7 +12,7 @@ import 'datatables.net-searchbuilder-bs5';
 import 'datatables.net-searchpanes-bs5';
 
 
-function BGDataTable({ headers, rows, editCallback, deleteCallback }) {
+function BGDataTable({ headers, rows, columnSettings, editCallback, deleteCallback }) {
     DataTable.use(BS5);
     let actionButtonColumnIndex = headers.length - 1;
     console.log(`Datatable headers:\n${headers}`);
@@ -31,7 +31,7 @@ function BGDataTable({ headers, rows, editCallback, deleteCallback }) {
     }
 
     return (
-        <DataTable data={rows} className="display" slots={{
+        <DataTable data={rows} columns={columnSettings ? {columnDefs: columnSettings} : null} className="display" slots={{
             [actionButtonColumnIndex]: (data, row) => (
                 <>
                     <Button variant='primary' onClick={() => {
@@ -39,7 +39,7 @@ function BGDataTable({ headers, rows, editCallback, deleteCallback }) {
                     }}>
                         Edit
                     </Button>
-                    <Button variant='danger' onClick={() => {deleteCallback(parseInt(row[0]))}}>
+                    <Button variant='danger' onClick={() => {deleteCallback(row)}}>
                         Delete
                     </Button>
                 </>

@@ -32,7 +32,8 @@ const TraitsPage = () => {
     }
 
     const handleDeleteClose = () => setDeleteModalShow(false);
-    const handleDeleteShow = (traitID) => {
+    const handleDeleteShow = (row) => {
+        const traitID = parseInt(row[0]);
         setDeleteModalShow(true);
         setDeleteID(traitID);
     }

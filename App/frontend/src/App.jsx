@@ -7,7 +7,7 @@ import SpeciesPage from "./pages/SpeciesPage";
 import HybridsPage from "./pages/HybridsPage.jsx";
 import TraitsPage from "./pages/TraitsPage";
 import HybridizationsPage from "./pages/HybridizationsPage";
-import SpeciesTraitsPage from "./pages/SpeciesTraits.jsx";
+import SpeciesTraitsPage from "./pages/SpeciesTraitsPage.jsx";
 
 function App() {
   return (
