@@ -4,12 +4,12 @@ const {
   getSpeciesTraits,
   createSpeciesTrait,
   updateSpeciesTrait,
-  deleteSpeciesTraits
+  deleteSpeciesTrait
 } = require("../controllers/speciesTraitsController");
 
 router.get("/", getSpeciesTraits);
 router.post("/", createSpeciesTrait);
 router.put("/:speciesID&:traitID", updateSpeciesTrait);
-// router.delete("/:id", deleteSpeciesTraits);
+router.delete("/:speciesID&:traitID", deleteSpeciesTrait);
 
 module.exports = router;

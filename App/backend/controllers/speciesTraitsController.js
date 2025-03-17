@@ -7,7 +7,7 @@ const lodash = require("lodash");
 
 const getSpeciesTraits = async (req, res) => {
   try {
-    const query = `SELECT Species.speciesName, Traits.traitName, Traits.traitValue FROM SpeciesTraits
+    const query = `SELECT Species.speciesID, Species.speciesName, Traits.traitID, Traits.traitName, Traits.traitValue FROM SpeciesTraits
       JOIN Species ON SpeciesTraits.speciesID = Species.speciesID
       JOIN Traits ON SpeciesTraits.traitID = Traits.traitID
       ORDER BY Species.speciesID;;  
@@ -94,6 +94,16 @@ const updateSpeciesTrait = async (req, res) => {
   const newSpeciesTrait = req.body;
   let response = null;
   try {
+
+    const [isExisting] = await db.query(
+      `SELECT * FROM SpeciesTraits where speciesID = ${speciesID} AND traitID = ${traitID};`
+    );
+
+    // If the species doesn't exist, return an error
+    if (isExisting.length === 0) {
+      return res.status(404).send("Species not found");
+    }
+
     // If any attributes are not equal, perform update
     const deleteQuery = `DELETE FROM SpeciesTraits
               WHERE speciesID = ${speciesID} AND traitID = ${traitID};`
@@ -112,14 +122,17 @@ const updateSpeciesTrait = async (req, res) => {
 
 // Endpoint to delete a customer from the database
 const deleteSpeciesTrait = async (req, res) => {
-  console.log("Deleting species with id:", req.params.id);
-  const speciesID = req.params.id;
+  console.log(`DELETE SpeciesTrait:`);
+  console.log(JSON.stringify(req.params));
+  console.log(JSON.stringify(req.body));
+  // Get the person ID
+  const speciesID = req.params.speciesID;
+  const traitID = req.params.traitID;
 
   try {
     // Ensure the species exitst
     const [isExisting] = await db.query(
-      "SELECT 1 FROM Species WHERE speciesID = ?",
-      [speciesID]
+      `SELECT * FROM SpeciesTraits where speciesID = ${speciesID} AND traitID = ${traitID};`
     );
 
     // If the species doesn't exist, return an error
@@ -140,12 +153,15 @@ const deleteSpeciesTrait = async (req, res) => {
     );*/
 
     // Delete the species from bsg_people
-    await db.query("DELETE FROM Species WHERE speciesID = ?", [speciesID]);
+    
+    await db.query(
+      `DELETE FROM SpeciesTraits WHERE speciesID = ${speciesID} AND traitID = ${traitID};`      
+    );
 
     // Return the appropriate status code
-    res.status(204).json({ message: "species deleted successfully" })
+    res.status(204).json({ message: "Species-Trait deleted successfully" })
   } catch (error) {
-    console.error("Error deleting species from the database:", error);
+    console.error("Error deleting Species-Trait from the database:", error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -155,5 +171,5 @@ module.exports = {
   getSpeciesTraits,
   createSpeciesTrait,
   updateSpeciesTrait,
-  //deleteSpeciesTrait
+  deleteSpeciesTrait
 };
