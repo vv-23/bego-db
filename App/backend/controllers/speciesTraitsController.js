@@ -5,8 +5,23 @@ require("dotenv").config();
 // Util to deep-compare two objects
 const lodash = require("lodash");
 
-// Returns all rows of people in bsg_people
 const getSpeciesTraits = async (req, res) => {
+  try {
+    const query = `SELECT Species.speciesName, Traits.traitName, Traits.traitValue FROM SpeciesTraits
+      JOIN Species ON SpeciesTraits.speciesID = Species.speciesID
+      JOIN Traits ON SpeciesTraits.traitID = Traits.traitID
+      ORDER BY Species.speciesID;;  
+    `
+    const [rows] = await db.query(query);
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Error fetching species from the database:", error);
+    res.status(500).json({ error: "Error fetching species" });
+  }
+}
+
+// Returns all rows of people in bsg_people
+const getSpeciesTraitsFormatted = async (req, res) => {
   try {
     // Select all rows from the "bsg_people" table
     const query = `SELECT
@@ -48,64 +63,51 @@ const getSpeciesByID = async (req, res) => {
 
 // Returns status of creation of new person in bsg_people
 const createSpeciesTrait = async (req, res) => {
+  console.log(`CREATE SpeciesTrait`);
+  console.log(JSON.stringify(req.body));
   try {
-    const { name, subsection, chromosomes, originCountry } = req.body;
-    const query =
-      "INSERT INTO Species (speciesName, subSection, chromosomeCount, originCountry) VALUES (?, ?, ?, ?)";
+    const { speciesID, traitID } = req.body;
+    const query = `INSERT INTO SpeciesTraits (speciesID, traitID) VALUES (?, ?);`;
 
     const response = await db.query(query, [
-      name,
-      subsection,
-      parseInt(chromosomes),
-      originCountry,
+      speciesID,
+      traitID,
     ]);
     res.status(201).json(response);
   } catch (error) {
     // Print the error for the dev
     console.error("Error creating species:", error);
     // Inform the client of the error
-    res.status(500).json({ error: "Error creating species" });
+    res.status(500).json({ error: "Error creating species", errorCode: (error.code || null) });
   }
 };
 
 
 const updateSpeciesTrait = async (req, res) => {
+  console.log(`UPDATE SpeciesTrait:`);
+  console.log(JSON.stringify(req.params));
+  console.log(JSON.stringify(req.body));
   // Get the person ID
-  const speciesID = req.params.id;
+  const speciesID = req.params.speciesID;
+  const traitID = req.params.traitID;
   // Get the person object
-  const newSpecies = req.body;
-
+  const newSpeciesTrait = req.body;
+  let response = null;
   try {
-    const [data] = await db.query(`SELECT * FROM Species WHERE speciesID = ${speciesID}`);
-
-    const oldSpecies = data[0];
-
     // If any attributes are not equal, perform update
-    if (!lodash.isEqual(newSpecies, oldSpecies)) {
-      const query =
-        "UPDATE Species SET speciesName=?, subSection=?, chromosomeCount=?, originCountry=? WHERE speciesID=?";
+    const deleteQuery = `DELETE FROM SpeciesTraits
+              WHERE speciesID = ${speciesID} AND traitID = ${traitID};`
+    await db.query(deleteQuery);
 
-      const values = [
-        newSpecies.name,
-        newSpecies.subsection,
-        parseInt(newSpecies.chromosomes),
-        newSpecies.originCountry,
-        speciesID
-      ];
-
-      // Perform the update
-      await db.query(query, values);
-      // Inform client of success and return 
-      return res.status(200).json({ message: "Species updated successfully." });
-    }
-
-    res.json({ message: "Species details are the same, no update" });
+    const query = `INSERT INTO SpeciesTraits (speciesID, traitID) VALUES (${newSpeciesTrait.speciesID}, ${newSpeciesTrait.traitID});`;
+    response = await db.query(query);
   } catch (error) {
     console.log("Error updating species", error);
-    res
+    return res
       .status(500)
-      .json({ error: `Error updating the species with id ${speciesID}` });
+      .json({ error: `Error updating the species with id ${speciesID}`, errorCode: (error.code || null) });
   }
+  return res.status(200).json({ message: "Species updated successfully." });
 };
 
 // Endpoint to delete a customer from the database
@@ -151,7 +153,7 @@ const deleteSpeciesTrait = async (req, res) => {
 // Export the functions as methods of an object
 module.exports = {
   getSpeciesTraits,
-  //createSpeciesTrait,
-  //updateSpeciesTrait,
+  createSpeciesTrait,
+  updateSpeciesTrait,
   //deleteSpeciesTrait
 };

@@ -28,8 +28,8 @@ const getHybridizationPretty = async (req, res) => {
             ovary.speciesName as ovaryName, 
             pollen.speciesName AS pollenName, 
             success FROM HybridizationEvents
-            INNER JOIN Species AS ovary ON HybridizationEvents.ovaryID = ovary.speciesID
-            INNER JOIN Species AS pollen ON HybridizationEvents.pollenID = pollen.speciesID;`
+            LEFT JOIN Species AS ovary ON HybridizationEvents.ovaryID = ovary.speciesID
+            LEFT JOIN Species AS pollen ON HybridizationEvents.pollenID = pollen.speciesID;`
         
         // Execute the query using the "db" object from the configuration file
         const [rows] = await db.query(query);
