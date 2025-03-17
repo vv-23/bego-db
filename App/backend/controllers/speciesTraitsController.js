@@ -3,7 +3,6 @@ const db = require("../database/config");
 // Load .env variables
 require("dotenv").config();
 // Util to deep-compare two objects
-const lodash = require("lodash");
 
 const getSpeciesTraits = async (req, res) => {
   try {

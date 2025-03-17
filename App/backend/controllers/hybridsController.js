@@ -22,18 +22,17 @@ const getHybrids = async (req, res) => {
 }
 
 // Returns all rows of hybrids
-const getHybridsFormatted = async (req, res) => {
+const getHybridsNames = async (req, res) => {
   try {
     // Select all rows from the "Hybrids" table
     const query = `SELECT Hybrids.hybridID, 
-      mother.speciesName AS motherPlant, 
-      father.speciesName AS fatherPlant, 
-      DATE_FORMAT(Hybrids.sowDate, '%Y-%m-%d') as sowDate, 
-      DATE_FORMAT(Hybrids.germinationDate, '%Y-%m-%d') as germinationDate, 
-      DATE_FORMAT(Hybrids.flowerDate, '%Y-%m-%d') as flowerDate FROM Hybrids 
-      JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID 
-      JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID 
-      JOIN Species father ON HybridizationEvents.pollenID = father.speciesID`;
+      CONCAT(HybridizationEvents.hybridizationDate, ' | ', mother.speciesName, ' x ', father.speciesName,  ' | ', IF(HybridizationEvents.success=1 , 'Success', 'Failed')) as hybridName
+      FROM Hybrids
+      JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID
+      LEFT JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID
+      LEFT JOIN Species father ON HybridizationEvents.pollenID = father.speciesID
+      ORDER BY Hybrids.hybridID;
+      `;
     // Execute the query using the "db" object from the configuration file
     const [rows] = await db.query(query);
     // Send back the rows to the client
@@ -158,6 +157,7 @@ const deleteHybrid = async (req, res) => {
 // Export the functions as methods of an object
 module.exports = {
   getHybrids,
+  getHybridsNames,
   createHybrid,
   updateHybrid,
   deleteHybrid,

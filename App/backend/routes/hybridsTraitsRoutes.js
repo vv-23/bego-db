@@ -1,15 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const {
-  getHybridTraits,
+  getHybridsTraits,
   createHybridTrait,
   updateHybridTrait,
   deleteHybridTrait,
-} = require("../controllers/hybridsTraitsController");
+} = require("../controllers/hybridsTraitsController.js");
 
-router.get("/", getHybridTraits);
-//router.post("/", createHybridTrait);
-//router.put("/:id", updateHybridTrait);
-//router.delete("/:id", deleteHybridTrait);
+router.get("/", getHybridsTraits);
+router.post("/", createHybridTrait);
+router.put("/:hybridID&:traitID", updateHybridTrait);
+router.delete("/:hybridID&:traitID", deleteHybridTrait);
 
 module.exports = router;
