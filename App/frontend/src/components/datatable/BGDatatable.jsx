@@ -37,7 +37,7 @@ function BGDataTable({ headers, rows, columnSettings, editCallback, deleteCallba
     }
 
     return (
-        <DataTable data={rows} options={{columnDefs: columnSettings ? columnSettings : null}} className="display table  row-border" slots={{
+        <DataTable data={rows} options={{columnDefs: columnSettings ? columnSettings : null}} className="display table row-border" slots={{
             [actionButtonColumnIndex]: (data, row) => (
                 <Stack direction='horizontal' gap={1}>
                     <Button variant='primary' onClick={() => {

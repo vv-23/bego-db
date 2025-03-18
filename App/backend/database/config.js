@@ -6,10 +6,10 @@ require("dotenv").config();
 const pool = mysql.createPool({
   connectionLimit: 10,
   waitForConnections: true,
-  host: process.env.DB_HOST || "pepper",
+  host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "begonia",
-  database: process.env.DB_DATABASE || "begonia",
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
 }).promise();
 
 // Export it for use in our application

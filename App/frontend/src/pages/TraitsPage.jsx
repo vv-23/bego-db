@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import BGDataTable from '../components/datatable/BGDatatable';
-import TraitsPageForm from '../components/traitsPageForm/TraitsPageForm';
+import TraitsPageForm from '../components/forms/TraitsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { set, useForm } from "react-hook-form";
@@ -17,7 +17,6 @@ const TraitsPage = () => {
         fetchTraits();
     }, []);
 
-    const { register, getValues } = useForm();
     const [editFormInitialValues, setEditFormInitialValues] = useState({
         'ID': null,
         'Name': null,

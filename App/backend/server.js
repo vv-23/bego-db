@@ -1,3 +1,5 @@
+//Copied from CS340 starter code
+
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();

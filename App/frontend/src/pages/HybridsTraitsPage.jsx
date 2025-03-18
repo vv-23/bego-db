@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import BGDataTable from '../components/datatable/BGDatatable';
-import HybridsTraitsPageForm from '../components/hybridsTraitsPageForm/HybridsTraitsPageForm';
+import HybridsTraitsPageForm from '../components/forms/HybridsTraitsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { HybridsNamesContext, TraitsContext } from '../components/context/BegoniaContext';

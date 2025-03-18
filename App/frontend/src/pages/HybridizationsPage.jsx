@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { SpeciesNamesContext, SpeciesNamesProvider } from '../components/context/BegoniaContext';
+import { SpeciesNamesContext } from '../components/context/BegoniaContext';
 import BGDataTable from '../components/datatable/BGDatatable';
-import HybridizationsPageForm from '../components/hybridizationsPageForm/HybridizationsPageForm';
+import HybridizationsPageForm from '../components/forms/HybridizationsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { set, useForm } from "react-hook-form";
@@ -20,7 +20,6 @@ const HybridizationsPage = () => {
         fetchSpeciesNames();
     }, []);
 
-    const { register, getValues } = useForm();
     const [editFormInitialValues, setEditFormInitialValues] = useState({
         'ID': null,
         'Date': null,

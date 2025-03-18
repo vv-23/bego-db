@@ -5,10 +5,10 @@ require("dotenv").config();
 // Util to deep-compare two objects
 const lodash = require("lodash");
 
-// Returns all rows of people in bsg_people
+
 const getHybridization = async (req, res) => {
   try {
-    // Select all rows from the "bsg_people" table
+
     const query = `SELECT *, DATE_FORMAT(hybridizationDate, '%Y-%m-%d') as hybridizationDate FROM HybridizationEvents`;
     // Execute the query using the "db" object from the configuration file
     const [rows] = await db.query(query);
@@ -22,7 +22,7 @@ const getHybridization = async (req, res) => {
 
 const getHybridizationPretty = async (req, res) => {
     try {
-        // Select all rows from the "bsg_people" table
+
         const query = 
         `SELECT hybridizationID, DATE_FORMAT(hybridizationDate, '%Y-%m-%d') as hybridizationDate, 
             ovary.speciesName as ovaryName, 
@@ -41,25 +41,6 @@ const getHybridizationPretty = async (req, res) => {
       }
 }
 
-// Returns a single person by their unique ID from bsg_people
-const getHybridizationByID = async (req, res) => {
-  try {
-    const personID = req.params.id;
-    const query = "SELECT * FROM bsg_people WHERE id = ?";
-    const [result] = await db.query(query, [personID]);
-    // Check if person was found
-    if (result.length === 0) {
-      return res.status(404).json({ error: "Person not found" });
-    }
-    const person = result[0];
-    res.json(person);
-  } catch (error) {
-    console.error("Error fetching person from the database:", error);
-    res.status(500).json({ error: "Error fetching person" });
-  }
-};
-
-// Returns status of creation of new person in bsg_people
 const createHybridization = async (req, res) => {
   try {
     const { date, ovary, pollen, success } = req.body;
@@ -74,18 +55,14 @@ const createHybridization = async (req, res) => {
     ]);
     res.status(201).json(response);
   } catch (error) {
-    // Print the error for the dev
     console.error("Error creating Hybridization:", error);
-    // Inform the client of the error
     res.status(500).json({ error: "Error creating Hybridization" });
   }
 };
 
 
 const updateHybridization = async (req, res) => {
-  // Get the person ID
   const hybridizationID = req.params.id;
-  // Get the person object
   const newHybridization = req.body;
 
   try {
@@ -93,7 +70,6 @@ const updateHybridization = async (req, res) => {
 
     const oldHybridization = data[0];
 
-    // If any attributes are not equal, perform update
     if (!lodash.isEqual(newHybridization, oldHybridization)) {
       const query =
         "UPDATE HybridizationEvents SET hybridizationDate=?, ovaryID=?, pollenID=?, success=? WHERE hybridizationID=?";
@@ -121,7 +97,7 @@ const updateHybridization = async (req, res) => {
   }
 };
 
-// Endpoint to delete a customer from the database
+
 const deleteHybridization = async (req, res) => {
   console.log("Deleting Hybridization with id:", req.params.id);
   const hybridizationID = req.params.id;
@@ -137,20 +113,6 @@ const deleteHybridization = async (req, res) => {
     if (isExisting.length === 0) {
       return res.status(404).send("Hybridizations not found");
     }
-
-    // Delete related records from the intersection table (see FK contraints bsg_cert_people)
-    /*const [response] = await db.query(
-      "DELETE FROM bsg_cert_people WHERE pid = ?",
-      [HybridizationID]
-    );
-
-    console.log(
-      "Deleted",
-      response.affectedRows,
-      "rows from bsg_cert_people intersection table"
-    );*/
-
-    // Delete the Hybridization from bsg_people
     await db.query("DELETE FROM HybridizationEvents WHERE HybridizationID = ?", [hybridizationID]);
 
     // Return the appropriate status code

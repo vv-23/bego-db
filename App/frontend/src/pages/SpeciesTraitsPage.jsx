@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import BGDataTable from '../components/datatable/BGDatatable';
-import SpeciesTraitsPageForm from '../components/speciesTraitsPageForm/SpeciesTraitsPageForm';
+import SpeciesTraitsPageForm from '../components/forms/SpeciesTraitsPageForm';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { SpeciesNamesContext, TraitsContext } from '../components/context/BegoniaContext';

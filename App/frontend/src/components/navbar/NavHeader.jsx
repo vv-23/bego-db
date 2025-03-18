@@ -2,6 +2,7 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 
+//Copied from https://react-bootstrap.netlify.app/docs/components/navbar/ with changes to fit our needs
 function NavHeader() {
   return (
     <Container fluid>
