@@ -76,7 +76,7 @@ const HybridsPageForm = ({ mode, preloadData, submitCallback, modalCallback }) =
 
             <Form.Group>
                 <Form.Label>Sow Date:</Form.Label>
-                <Form.Control type='date' {...register(inputNames.sowDate)} defaultValue={preloadData["Sow Date"]} />
+                <Form.Control type='date' {...register(inputNames.sowDate)} defaultValue={preloadData["Sow Date"]} required/>
             </Form.Group>
             <Form.Group>
                 <Form.Label>Germination Date:</Form.Label>
