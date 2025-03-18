@@ -26,7 +26,11 @@ const getHybridsNames = async (req, res) => {
   try {
     // Select all rows from the "Hybrids" table
     const query = `SELECT Hybrids.hybridID, 
-      CONCAT(HybridizationEvents.hybridizationDate, ' | ', mother.speciesName, ' x ', father.speciesName,  ' | ', IF(HybridizationEvents.success=1 , 'Success', 'Failed')) as hybridName
+      CONCAT(
+        Hybrids.hybridID, ' | ',
+        HybridizationEvents.hybridizationDate, ' | ', 
+        IFNULL(mother.speciesName, 'null'), ' x ', IFNULL(father.speciesName, 'null'),  ' | ', 
+        IF(HybridizationEvents.success=1 , 'Success', 'Failed')) as hybridName
       FROM Hybrids
       JOIN HybridizationEvents ON Hybrids.hybridizationID = HybridizationEvents.hybridizationID
       LEFT JOIN Species mother ON HybridizationEvents.ovaryID  = mother.speciesID
