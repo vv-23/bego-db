@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import BGDataTable from '../components/datatable/BGDatatable';
 import SpeciesPageForm from '../components/speciesPageForm/SpeciesPageForm';
 import Modal from 'react-bootstrap/Modal';
-import { Button } from 'react-bootstrap';
+import { Button, Col, Container, Row, Stack } from 'react-bootstrap';
 import { set, useForm } from "react-hook-form";
 
 
@@ -152,13 +152,32 @@ const SpeciesPage = () => {
 
     return (
         <>
-            <div className="container my-4">
-                <h1>Species</h1>
-                <BGDataTable headers={speciesHeaders} rows={speciesRows} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
-
-                <h2 className="mt-4">Add Species</h2>
-                <SpeciesPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
-            </div>
+            <Container className='my-4'> 
+                <Stack gap={2}>
+                <Container>
+                    <h1 className='text-center'>Species</h1>
+                </Container>
+                <Container>
+                    <BGDataTable headers={speciesHeaders} 
+                        rows={speciesRows} 
+                        editCallback={handleEditShow} 
+                        deleteCallback={handleDeleteShow}
+                        ></BGDataTable>
+                </Container>
+                <Container>
+                    <h2 className="text-center">Add Species</h2>
+                </Container>
+                <Container className="justify-content-md-center">
+                    <Row>
+                        <Col></Col>
+                        <Col className='col-6'>
+                            <SpeciesPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
+                        </Col>
+                        <Col></Col>
+                    </Row>
+                </Container>
+                </Stack>
+            </Container>
             <Modal show={editModalShow} onHide={handleEditClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Species</Modal.Title>

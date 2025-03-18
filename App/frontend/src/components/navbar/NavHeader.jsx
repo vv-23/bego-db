@@ -4,26 +4,24 @@ import Navbar from 'react-bootstrap/Navbar';
 
 function NavHeader() {
   return (
-    <>
-      <Navbar expand="lg" className="bg-body-tertiary">
+    <Container fluid>
+      <Navbar expand="lg">
         <Container>
-          
-          <Navbar.Brand href='/'>Begonia Hybrid Database</Navbar.Brand>
-
+          <Navbar.Brand className='nav-text' href='/'>Begonia Hybrid Database</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-                <Nav.Link href='/species'>Species</Nav.Link>
-                <Nav.Link href='/hybridizations'>Hybridization Events</Nav.Link>
-                <Nav.Link href='/hybrids'>Hybrids</Nav.Link>
-                <Nav.Link href='/traits'>Traits</Nav.Link>
-                <Nav.Link href='/speciesTraits'>Species Traits</Nav.Link>
-                <Nav.Link href='/hybridsTraits'>Hybrid Traits</Nav.Link>
+            <Nav className="me-auto justify-content-center">
+                <Nav.Link className='nav-text' href='/species'>Species</Nav.Link>
+                <Nav.Link className='nav-text' href='/hybridizations'>Hybridization Events</Nav.Link>
+                <Nav.Link className='nav-text' href='/hybrids'>Hybrids</Nav.Link>
+                <Nav.Link className='nav-text' href='/traits'>Traits</Nav.Link>
+                <Nav.Link className='nav-text' href='/speciesTraits'>Species Traits</Nav.Link>
+                <Nav.Link className='nav-text' href='/hybridsTraits'>Hybrid Traits</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    </>
+    </Container>
   );
 }
 

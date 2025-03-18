@@ -16,3 +16,38 @@
 .me-auto {
     justify-content: center
 }
+
+.bg {
+    background-image: url("assets/bg_home.JPG");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-x: 30vh;
+    height: 100vh;
+}
+
+.welcome-box {
+    position: fixed;
+    top: 10vh;
+    left: 10vh;
+    max-width: 80vh;
+    background-color: white;
+    border: 5px solid #003021;
+    border-radius: 25px;
+    padding: 15px;
+}
+
+.navbar {
+    background-color: #003021;
+}
+
+.navbar-brand {
+    font-weight: 600 !important;
+}
+
+.nav-text {
+    color: white !important;
+}
+
+.btn-primary {
+    background-color: #03593e !important;
+}

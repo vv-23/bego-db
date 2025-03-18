@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BGDataTable from '../components/datatable/BGDatatable';
 import HybridsTraitsPageForm from '../components/hybridsTraitsPageForm/HybridsTraitsPageForm';
 import Modal from 'react-bootstrap/Modal';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { HybridsNamesContext, TraitsContext } from '../components/context/BegoniaContext';
 import { fetchData } from '../utils/sharedutils';
 
@@ -149,13 +149,37 @@ const HybridsTraitsPage = () => {
     return (
         <HybridsNamesContext.Provider value={hybridsNames}>
             <TraitsContext.Provider value={traits}>
-                <div className="container my-4">
-                    <h1>Hybrids Traits</h1>
-                    <BGDataTable headers={speciesTraitHeaders} rows={hybridsTraitsRows} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
-
-                    <h2 className="mt-4">Add Hybrid-Trait</h2>
-                    <HybridsTraitsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
-                </div>
+                <Container className='my-4'>
+                    <Stack gap={2}>
+                        <Container>
+                            <h1 className='text-center'>Hybrids Traits</h1>
+                        </Container>
+                        <Container>
+                            <BGDataTable
+                                headers={speciesTraitHeaders}
+                                rows={hybridsTraitsRows}
+                                editCallback={handleEditShow}
+                                deleteCallback={handleDeleteShow}
+                                columnSettings={[
+                                    { className: "dt-center", targets: "_all" },
+                                    { width: "40%", targets: 1 }
+                                ]}
+                            ></BGDataTable>
+                        </Container>
+                        <Container>
+                            <h2 className="text-center">Add Hybrid-Trait</h2>
+                        </Container>
+                        <Container className="justify-content-md-center">
+                            <Row>
+                                <Col></Col>
+                                <Col className='col-6'>
+                                    <HybridsTraitsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
+                                </Col>
+                                <Col></Col>
+                            </Row>
+                        </Container>
+                    </Stack>
+                </Container>
                 <Modal show={editModalShow} onHide={handleEditClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit Traits</Modal.Title>

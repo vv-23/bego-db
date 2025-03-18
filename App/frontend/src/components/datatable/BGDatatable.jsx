@@ -1,6 +1,6 @@
 "use client"
 import { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Stack, Container } from 'react-bootstrap';
 import DataTable from 'datatables.net-react';
 import BS5 from 'datatables.net-bs5';
 import 'datatables.net-colreorder-bs5';
@@ -14,6 +14,12 @@ import 'datatables.net-searchpanes-bs5';
 
 function BGDataTable({ headers, rows, columnSettings, editCallback, deleteCallback }) {
     DataTable.use(BS5);
+    if (!columnSettings) {
+        columnSettings = [
+            {className: "dt-center", targets: "_all"}
+        ]
+    }
+    console.log(columnSettings);
     let actionButtonColumnIndex = headers.length - 1;
     console.log(`Datatable headers:\n${headers}`);
     console.log(`Datatable rows:\n`);
@@ -31,9 +37,9 @@ function BGDataTable({ headers, rows, columnSettings, editCallback, deleteCallba
     }
 
     return (
-        <DataTable data={rows} columns={columnSettings ? {columnDefs: columnSettings} : null} className="display" slots={{
+        <DataTable data={rows} options={{columnDefs: columnSettings ? columnSettings : null}} className="display table  row-border" slots={{
             [actionButtonColumnIndex]: (data, row) => (
-                <>
+                <Stack direction='horizontal' gap={1}>
                     <Button variant='primary' onClick={() => {
                         editCallback(mapRowToHeaders(headers, row))
                     }}>
@@ -42,7 +48,7 @@ function BGDataTable({ headers, rows, columnSettings, editCallback, deleteCallba
                     <Button variant='danger' onClick={() => {deleteCallback(row)}}>
                         Delete
                     </Button>
-                </>
+                </Stack>
             )
         }}>
             <thead>

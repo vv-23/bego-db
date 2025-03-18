@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BGDataTable from '../components/datatable/BGDatatable';
 import HybridsPageForm from '../components/hybridsPageForm/HybridsPageForm';
 import Modal from 'react-bootstrap/Modal';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { HybridizationsContext } from '../components/context/BegoniaContext';
 import { fetchData } from '../utils/sharedutils';
 
@@ -170,19 +170,39 @@ const HybridsPage = () => {
 
     return (
         <HybridizationsContext.Provider value={hybridizations}>
-            <div className="container my-4">
-                <h1>Hybrids</h1>
-                <BGDataTable headers={HybridHeaders} rows={processTable(hybridRows, hybridizations)} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
+            <Container className='my-4'>
+                <Stack gap={2}>
+                    <Container>
+                        <h1 className='text-center'>Hybrids</h1>
+                    </Container>
+                    <Container>
+                        <BGDataTable headers={HybridHeaders}
+                            rows={processTable(hybridRows, hybridizations)}
+                            editCallback={handleEditShow}
+                            deleteCallback={handleDeleteShow}
+                        ></BGDataTable>
+                    </Container>
+                    <Container>
+                        <h2 className="text-center">Add Hybrid</h2>
+                    </Container>
+                    <Container className="justify-content-md-center">
+                        <Row>
+                            <Col></Col>
+                            <Col className='col-6'>
+                                <HybridsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                    </Container>
+                </Stack>
+            </Container>
 
-                <h2 className="mt-4">Add Hybrid</h2>
-                <HybridsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
-            </div>
             <Modal size='lg' show={editModalShow} onHide={handleEditClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Hybrid</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <HybridsPageForm mode={"edit"} preloadData={editFormInitialValues} submitCallback={handleEditSubmit} modalCallback={handleEditClose}/>
+                    <HybridsPageForm mode={"edit"} preloadData={editFormInitialValues} submitCallback={handleEditSubmit} modalCallback={handleEditClose} />
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleEditClose}>
@@ -199,10 +219,10 @@ const HybridsPage = () => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="danger" onClick={() => {
-                            handleDelete(deleteID);
-                            setDeleteID(null);
-                            handleDeleteClose();
-                        }}>
+                        handleDelete(deleteID);
+                        setDeleteID(null);
+                        handleDeleteClose();
+                    }}>
                         Delete
                     </Button>
                     <Button variant="secondary" onClick={handleDeleteClose}>

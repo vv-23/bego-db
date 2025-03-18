@@ -4,7 +4,7 @@ import { SpeciesNamesContext, SpeciesNamesProvider } from '../components/context
 import BGDataTable from '../components/datatable/BGDatatable';
 import HybridizationsPageForm from '../components/hybridizationsPageForm/HybridizationsPageForm';
 import Modal from 'react-bootstrap/Modal';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { set, useForm } from "react-hook-form";
 
 
@@ -144,7 +144,7 @@ const HybridizationsPage = () => {
     }
 
     const processTable = (hybridizationRows, speciesNames) => {
-        const speciesMap = speciesNames.reduce((map, {speciesID, speciesName}) => {
+        const speciesMap = speciesNames.reduce((map, { speciesID, speciesName }) => {
             map[speciesID] = speciesName;
             return map;
         }, {});
@@ -157,7 +157,7 @@ const HybridizationsPage = () => {
                 ovarySpecies,   // ovary species name
                 pollenSpecies,  // pollen species name
                 row[4]        // success
-              ];
+            ];
         })
         return processedTable;
     }
@@ -174,13 +174,33 @@ const HybridizationsPage = () => {
 
     return (
         <SpeciesNamesContext.Provider value={speciesNames}>
-            <div className="container my-4">
-                <h1>Hybridization Events</h1>
-                <BGDataTable headers={hybridizationHeaders} rows={processTable(hybridizationRows, speciesNames)} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
+            <Container className='my-4'>
+                <Stack gap={2}>
+                    <Container>
+                        <h1 className='text-center'>Hybridization Events</h1>
+                    </Container>
+                    <Container>
+                        <BGDataTable headers={hybridizationHeaders}
+                            rows={processTable(hybridizationRows, speciesNames)}
+                            editCallback={handleEditShow}
+                            deleteCallback={handleDeleteShow}
+                        ></BGDataTable>
+                    </Container>
+                    <Container>
+                        <h2 className="text-center">Add Hybridizations</h2>
+                    </Container>
+                    <Container className="justify-content-md-center">
+                        <Row>
+                            <Col></Col>
+                            <Col className='col-6'>
+                                <HybridizationsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
+                            </Col>
+                            <Col></Col>
+                        </Row>
+                    </Container>
+                </Stack>
+            </Container>
 
-                <h2 className="mt-4">Add Hybridizations</h2>
-                <HybridizationsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
-            </div>
             <Modal show={editModalShow} onHide={handleEditClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Hybridizations</Modal.Title>

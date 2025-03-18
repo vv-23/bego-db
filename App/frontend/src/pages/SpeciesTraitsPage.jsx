@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BGDataTable from '../components/datatable/BGDatatable';
 import SpeciesTraitsPageForm from '../components/speciesTraitsPageForm/SpeciesTraitsPageForm';
 import Modal from 'react-bootstrap/Modal';
-import { Button } from 'react-bootstrap';
+import { Button, Container, Stack, Row, Col } from 'react-bootstrap';
 import { SpeciesNamesContext, TraitsContext } from '../components/context/BegoniaContext';
 import { fetchData } from '../utils/sharedutils';
 
@@ -148,13 +148,34 @@ const SpeciesTraitsPage = () => {
     return (
         <SpeciesNamesContext.Provider value={speciesNames}>
             <TraitsContext.Provider value={traits}>
-                <div className="container my-4">
-                    <h1>Species Traits</h1>
-                    <BGDataTable headers={speciesTraitHeaders} rows={speciesTraitsRows} editCallback={handleEditShow} deleteCallback={handleDeleteShow}></BGDataTable>
+                <Container className='my-4'>
+                    <Stack gap={2}>
+                        <Container>
+                            <h1 className='text-center'>Species Traits</h1>
+                        </Container>
+                        <Container>
+                            <BGDataTable
+                                headers={speciesTraitHeaders}
+                                rows={speciesTraitsRows}
+                                editCallback={handleEditShow}
+                                deleteCallback={handleDeleteShow}
+                            ></BGDataTable>
+                        </Container>
+                        <Container>
+                            <h2 className="text-center">Add Species Traits</h2>
+                        </Container>
+                        <Container className="justify-content-md-center">
+                            <Row>
+                                <Col></Col>
+                                <Col className='col-6'>
+                                    <SpeciesTraitsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
+                                </Col>
+                                <Col></Col>
+                            </Row>
+                        </Container>
+                    </Stack>
+                </Container>
 
-                    <h2 className="mt-4">Add Traits</h2>
-                    <SpeciesTraitsPageForm mode={"add"} preloadData={{}} submitCallback={handleAddSubmit} />
-                </div>
                 <Modal show={editModalShow} onHide={handleEditClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit Traits</Modal.Title>
