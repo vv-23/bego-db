@@ -50,7 +50,7 @@ const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallba
             <Form.Group>
                 <Form.Label>Mother species:</Form.Label>
                 <Form.Select {...register(inputNames.ovary)} required defaultValue={matchSpeciesNameToID(preloadData["Mother sp."])}>
-                    <option value={null}>N/A</option>
+                    <option value={"NULL"}>N/A</option>
                     {
                         speciesNames.map((obj, index) => {
                             return <option value={obj['speciesID']} key={obj['speciesName']}>{obj['speciesName']}</option>
@@ -61,7 +61,7 @@ const HybridizationsPageForm = ({ mode, preloadData, submitCallback, modalCallba
             <Form.Group>
                 <Form.Label>Father species:</Form.Label>
                 <Form.Select {...register(inputNames.pollen)} required defaultValue={matchSpeciesNameToID(preloadData["Father sp."])}>
-                    <option value={null}>N/A</option>
+                    <option value={"NULL"}>N/A</option>
                     {
                         speciesNames.map((obj, index) => {
                             return <option value={obj['speciesID']} key={obj['speciesName']}>{obj['speciesName']}</option>

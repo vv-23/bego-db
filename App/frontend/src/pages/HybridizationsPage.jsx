@@ -102,14 +102,16 @@ const HybridizationsPage = () => {
         }
     }
 
-    const editHybridizations = async (newHybridizations) => {
-        const URL = `${import.meta.env.VITE_API_URL}/hybridizations/${newHybridizations.id}`;
+    const editHybridizations = async (newHybridization) => {
+        const URL = `${import.meta.env.VITE_API_URL}/hybridizations/${newHybridization.id}`;
+        newHybridization.ovary = newHybridization.ovary == "NULL" ? null : newHybridization.ovary;
+        newHybridization.pollen = newHybridization.pollen == "NULL" ? null : newHybridization.pollen;
         console.log(URL);
         try {
             let response = await fetch(URL, {
                 method: "PUT",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newHybridizations)
+                body: JSON.stringify(newHybridization)
             });
             if (response.status === 200) {
                 navigate("/hybridizations");
