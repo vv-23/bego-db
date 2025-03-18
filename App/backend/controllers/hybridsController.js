@@ -72,9 +72,9 @@ const createHybrid = async (req, res) => {
 
     const response = await db.query(query, [
       hybridizationID,
-      sowDate,
-      germinationDate,
-      flowerDate,
+      sowDate ? sowDate : null,
+      germinationDate ? germinationDate : null,
+      flowerDate ? flowerDate : null,
     ]);
 
     res.status(201).json(response);
