@@ -7,7 +7,10 @@ require("dotenv").config();
 const getHybridsTraits = async (req, res) => {
   try {
     const query = `SELECT Hybrids.hybridID, 
-      CONCAT(HybridizationEvents.hybridizationDate, ' | ', mother.speciesName, ' x ', father.speciesName,  ' | ', IF(HybridizationEvents.success=1 , 'Success', 'Failed')) as hybridName,
+      CONCAT(
+        HybridizationEvents.hybridizationDate, ' | ', 
+        IFNULL(mother.speciesName, 'null'), ' x ', IFNULL(father.speciesName, 'null'),  ' | ', 
+        IF(HybridizationEvents.success=1 , 'Success', 'Failed')) as hybridName,
       Traits.traitID, 
       Traits.traitName, 
       Traits.traitValue 
